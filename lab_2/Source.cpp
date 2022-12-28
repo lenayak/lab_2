@@ -215,11 +215,6 @@ bool is_equal(T x, T y, T eps)
 		return true;
 }
 
-//template<typename T>
-//bool is_equal(complex<T> x, complex<T> y)
-//{
-//	// сравнение комплексных чисел
-//}
 
 template<typename T>
 bool operator==(const vector<T>& v1, const vector<T>& v2)
