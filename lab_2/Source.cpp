@@ -128,9 +128,11 @@ vector<T> operator-(const vector<T>& v1, const vector<T>& v2)
 	return copy;
 }
 
+//скалярное произведение векторов
 template<typename T>
 double operator*(const vector<T>& v1, const vector<T>& v2)
 {
+	if (v1.get_size() != v2.get_size()) throw 3;
 	double res = 0;
 	for (int i = 0; i < v1.get_size(); i++)
 	{
@@ -143,7 +145,7 @@ template<typename T>
 complex<T> operator*(const vector<complex<T>>& v1, const vector<complex<T>>& v2)
 {
 	if (v1.get_size() != v2.get_size()) throw 3;
-	std::complex<T> result(0, 0);
+	complex<T> result(0, 0);
 	for (int i = 0; i < v1.get_size(); i++) {
 		result += complex<T>(v1[i].real() * v2[i].real() - v1[i].imag() * v2[i].imag(), v1[i].real() * v2[i].imag() + v1[i].imag() * v2[i].real());
 	}
