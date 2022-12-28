@@ -3,6 +3,7 @@
 #include <Windows.h> 
 #include <cmath>
 #include <limits>
+#include <complex>
 using namespace std;
 
 template<typename T>
@@ -218,6 +219,44 @@ bool operator!=(const vector<T>& v1, const vector<T>& v2)
 	return!(v1 == v2);
 }
 
+
+
+template<typename T>
+void GetValueFromUser(complex<T>& val)
+{
+	T real = 0;
+	T imag = 0;
+	cout << "Enter a real part of the number: " << endl;
+	cin >> real;
+	cout << "Enter a imag part of the number: " << endl;
+	cin >> imag;
+	val.real(real);
+	val.imag(imag);
+}
+
+template<typename T>
+void comlex_(vector<complex<T>>& v)
+{
+	try
+	{
+		//изменение элемента по индексу
+		int index = 0;
+		complex<T> val((T)0, (T)0);
+		cout << "Enter the index of element you want to edit: " << endl;
+		cin >> index;
+		if (index >= v.get_size()) throw 2;
+		cout << "Enter a value for the element: " << endl;
+		GetValueFromUser(val);
+		v[index] = val;
+	}
+	catch()
+	{
+		cout << ex.what() << " Try again" << endl;
+	}
+
+}
+
+
 //Для параллелограмма, заданного 2 радиус - векторами a и b, рассчитать углы.
 template<typename T>
 double len_of_vector(const vector<T>& v)
@@ -331,5 +370,12 @@ int main()
 	cout << "vector a: " << v1 << "\n" << "vector b: " << v2 << endl;
 	cout << "first angle: " << find_first_angle(v1, v2) << endl;
 	cout << "second angle: " << find_second_angle(v1, v2) << endl;
+
+	complex<double> c1(2.5, 3.4);
+	complex<double> c2(2, 3);
+	complex<double> arr[2] = { c1,c2 };
+	vector<complex<double>> vc(2, arr);
+	comlex_(vc);
+
 	return 0;
 }
