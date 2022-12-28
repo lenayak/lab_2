@@ -20,12 +20,12 @@ public:
 
 	vector(int _size, T* _vect) : size(_size), vect(new T[_size])
 	{
-		memcpy(vect, _vect, sizeof(T) * size);              //копирует байты первого блока памяти(_vect) во второй блок памяти(vect)
+		memcpy(vect, _vect, sizeof(T) * size);              
 	}
 
 	vector(int _size) : size(_size), vect(new T[_size])
 	{
-		memset(vect, 0, sizeof(T) * size);                //заполняет vect нулями
+		memset(vect, 0, sizeof(T) * size);               
 	}
 
 	vector(const vector& v) : size(v.size), vect(new T[v.size])
@@ -139,30 +139,15 @@ double operator*(const vector<T>& v1, const vector<T>& v2)
 	return res;
 }
 
-// скалярное произведение векторов
 template<typename T>
 complex<T> operator*(const vector<complex<T>>& v1, const vector<complex<T>>& v2)
 {
 	if (v1.get_size() != v2.get_size()) throw 3;
-	complex<T> res(0, 0);
-	for (int i = 0; i < v1.get_size; i++)
-	{
-		res += complex<T>(v1[i].real() * v2[i].real - v1[i].imag() * v2[i].imag(), v1[i].real() * v2[i].imag() + v1[i].imag() * v2[i].real());
+	std::complex<T> result(0, 0);
+	for (int i = 0; i < v1.get_size(); i++) {
+		result += complex<T>(v1[i].real() * v2[i].real() - v1[i].imag() * v2[i].imag(), v1[i].real() * v2[i].imag() + v1[i].imag() * v2[i].real());
 	}
-	return res;
-}
-
-
-template<typename T>
-double multiple(const vector<complex<T>>& v1, const vector<complex<T>>& v2)
-{
-	if (v1.get_size() != v2.get_size()) throw 3;
-	complex<double> res(0, 0);
-	for (int i = 0; i < v1.get_size(); i++)
-	{
-		res += complex<T>(v1[i].real() * v2[i].real() - v1[i].imag() * v2[i].imag(), v1[i].real() * v2[i].imag() + v1[i].imag() * v2[i].real());
-	}
-	return res.real();
+	return result;
 }
 
 // оператор умножения вектора на скаляр
@@ -375,6 +360,8 @@ int main()
 	cout << "vc1   " << vc1;
 	vector<complex<double>> sum_vc = vc + vc1;
 	cout << "vc + vc1 = " << sum_vc << endl;
-	
+	complex<double> multi = vc * vc1;
+	cout << "vc * vc1 = " << multi;
+
 	return 0;
 }
