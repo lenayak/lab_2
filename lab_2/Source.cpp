@@ -70,7 +70,7 @@ public:
 		return *this;
 	}
 
-	vector& operator *=(double number)
+	vector& operator *=(T number)
 	{
 		for (int i = 0; i < size; i++)
 		{
@@ -79,7 +79,7 @@ public:
 		return *this;
 	}
 
-	vector& operator/=(double num)
+	vector& operator/=(T num)
 	{
 		if (num == 0.0) throw 1;
 		for (int i = 0; i < size; i++)
@@ -89,19 +89,19 @@ public:
 		return *this;
 	}
 
-	double& operator[](int index)
+	T& operator[](int index)
 	{
 		if (index >= size) throw 2;
 		return vect[index];
 	}
 
-	const double& operator[](int index) const
+	const T& operator[](int index) const
 	{
 		if (index >= size)throw 2;
 		return vect[index];
 	}
 
-	vector operator* (double number)
+	vector operator* (T number)
 	{
 		vector copy(size, vect);
 		copy *= number;
@@ -110,7 +110,7 @@ public:
 };
 
 
-template<class T>
+template<typename T>
 vector<T> operator+(const vector<T>& v1, const vector<T>& v2)
 {
 	if (v1.get_size() != v2.get_size()) throw 3;
@@ -139,6 +139,33 @@ double operator*(const vector<T>& v1, const vector<T>& v2)
 	return res;
 }
 
+// скал€рное произведение векторов
+template<typename T>
+complex<T> operator*(const vector<complex<T>>& v1, const vector<complex<T>>& v2)
+{
+	if (v1.get_size() != v2.get_size()) throw 3;
+	complex<T> res(0, 0);
+	for (int i = 0; i < v1.get_size; i++)
+	{
+		res += complex<T>(v1[i].real() * v2[i].real - v1[i].imag() * v2[i].imag(), v1[i].real() * v2[i].imag() + v1[i].imag() * v2[i].real());
+	}
+	return res;
+}
+
+
+template<typename T>
+double multiple(const vector<complex<T>>& v1, const vector<complex<T>>& v2)
+{
+	if (v1.get_size() != v2.get_size()) throw 3;
+	complex<double> res(0, 0);
+	for (int i = 0; i < v1.get_size(); i++)
+	{
+		res += complex<T>(v1[i].real() * v2[i].real() - v1[i].imag() * v2[i].imag(), v1[i].real() * v2[i].imag() + v1[i].imag() * v2[i].real());
+	}
+	return res.real();
+}
+
+// оператор умножени€ вектора на скал€р
 template<typename T>
 vector<T> operator*(const vector<T>& v, double num)
 {
@@ -155,6 +182,7 @@ vector<T> operator*(double num, const vector<T>& v)
 	return copy;
 }
 
+//оператор делени€ вектора на скал€р
 template<typename T>
 vector<T> operator/(const vector<T>& v, double num)
 {
@@ -176,7 +204,8 @@ ostream& operator <<(ostream& out, const vector<T>& v)
 	return out;
 }
 
-bool is_equal(double x, double y, double eps)
+template<typename T>
+bool is_equal(T x, T y, T eps)
 {
 	if (eps < 0)
 		eps = -eps;
@@ -186,10 +215,16 @@ bool is_equal(double x, double y, double eps)
 		return true;
 }
 
+//template<typename T>
+//bool is_equal(complex<T> x, complex<T> y)
+//{
+//	// сравнение комплексных чисел
+//}
+
 template<typename T>
 bool operator==(const vector<T>& v1, const vector<T>& v2)
 {
-	double eps;
+	T eps = 0;
 	cout << "Enter the precision with which you want to compare the numbers." << endl;
 	cout << "For example: 0.0001" << endl;
 	cin >> eps;
@@ -207,7 +242,7 @@ bool operator==(const vector<int>& v1, const vector<int>& v2)
 	if (v1.get_size() != v2.get_size()) throw 3;
 	for (int i = 0; i < v1.get_size(); i++)
 	{
-		if (is_equal(v1[i], v2[i], 0) == false)
+		if (is_equal(v1[i], v2[i],0) == false)
 			return false;
 	}
 	return true;
@@ -218,44 +253,6 @@ bool operator!=(const vector<T>& v1, const vector<T>& v2)
 {
 	return!(v1 == v2);
 }
-
-
-
-template<typename T>
-void GetValueFromUser(complex<T>& val)
-{
-	T real = 0;
-	T imag = 0;
-	cout << "Enter a real part of the number: " << endl;
-	cin >> real;
-	cout << "Enter a imag part of the number: " << endl;
-	cin >> imag;
-	val.real(real);
-	val.imag(imag);
-}
-
-template<typename T>
-void comlex_(vector<complex<T>>& v)
-{
-	try
-	{
-		//изменение элемента по индексу
-		int index = 0;
-		complex<T> val((T)0, (T)0);
-		cout << "Enter the index of element you want to edit: " << endl;
-		cin >> index;
-		if (index >= v.get_size()) throw 2;
-		cout << "Enter a value for the element: " << endl;
-		GetValueFromUser(val);
-		v[index] = val;
-	}
-	catch()
-	{
-		cout << ex.what() << " Try again" << endl;
-	}
-
-}
-
 
 //ƒл€ параллелограмма, заданного 2 радиус - векторами a и b, рассчитать углы.
 template<typename T>
@@ -375,7 +372,14 @@ int main()
 	complex<double> c2(2, 3);
 	complex<double> arr[2] = { c1,c2 };
 	vector<complex<double>> vc(2, arr);
-	comlex_(vc);
-
+	cout << "vc    " << vc;
+	complex<double> c_1(2, 3);
+	complex<double> c_2(5, 4);
+	complex<double> arr_1[2] = { c_1, c_2 };
+	vector<complex<double>> vc1(2,arr_1);
+	cout << "vc1   " << vc1;
+	vector<complex<double>> sum_vc = vc + vc1;
+	cout << "vc + vc1 = " << sum_vc << endl;
+	
 	return 0;
 }
