@@ -130,7 +130,7 @@ vector<T> operator-(const vector<T>& v1, const vector<T>& v2)
 
 //скалярное произведение векторов
 template<typename T>
-double operator*(const vector<T>& v1, const vector<T>& v2)
+double operator*(const vector<T>& v1, const vector<T>& v2)                     //обычные векторы
 {
 	if (v1.get_size() != v2.get_size()) throw 3;
 	double res = 0;
@@ -142,7 +142,7 @@ double operator*(const vector<T>& v1, const vector<T>& v2)
 }
 
 template<typename T>
-complex<T> operator*(const vector<complex<T>>& v1, const vector<complex<T>>& v2)
+complex<T> operator*(const vector<complex<T>>& v1, const vector<complex<T>>& v2)                //комплексные векторы
 {
 	if (v1.get_size() != v2.get_size()) throw 3;
 	complex<T> result(0, 0);
@@ -162,10 +162,28 @@ vector<T> operator*(const vector<T>& v, double num)
 }
 
 template<typename T>
-vector<T> operator*(double num, const vector<T>& v)
+vector<complex<T>> operator*(const vector<complex<T>>& v, T num)
+{
+	vector<complex<T>> copy = v;
+	copy.real() *= num;
+	copy.imag() *= num;
+	return copy;
+}
+
+template<typename T>
+vector<T> operator*(T num, const vector<T>& v)
 {
 	vector<T> copy = v;
 	copy *= num;
+	return copy;
+}
+
+template<typename T>
+vector<complex<T>> operator*(T num, const vector<complex<T>>& v)
+{
+	vector<complex<T>> copy = v;
+	copy.real() *= num;
+	copy.imag() *= num;
 	return copy;
 }
 
@@ -175,6 +193,15 @@ vector<T> operator/(const vector<T>& v, double num)
 {
 	vector<T> copy = v;
 	copy /= num;
+	return copy;
+}
+
+template<typename T>
+vector<complex<T>> operator/(const vector<complex<T>>& v, T num)
+{
+	vector<complex<T>> copy = v;
+	copy.real() /= num;
+	copy.imag() /= num;
 	return copy;
 }
 
@@ -204,7 +231,7 @@ bool is_equal(T x, T y, T eps)
 
 
 template<typename T>
-bool operator==(const vector<T>& v1, const vector<T>& v2)
+bool operator==(const vector<T>& v1, const vector<T>& v2)          //для векторов вещественных чисел
 {
 	T eps = 0;
 	cout << "Enter the precision with which you want to compare the numbers." << endl;
@@ -219,12 +246,26 @@ bool operator==(const vector<T>& v1, const vector<T>& v2)
 	return true;
 }
 
-bool operator==(const vector<int>& v1, const vector<int>& v2)
+bool operator==(const vector<int>& v1, const vector<int>& v2)       //для целочисленных векторов
 {
 	if (v1.get_size() != v2.get_size()) throw 3;
 	for (int i = 0; i < v1.get_size(); i++)
 	{
 		if (is_equal(v1[i], v2[i],0) == false)
+			return false;
+	}
+	return true;
+}
+
+template<typename T>
+bool operator==(const vector<complex<T>>& v1, const vector<complex<T>>& v2)    //для комплексных векторов
+{
+	if (v1.get_size() != v2.get_size()) throw 3;
+	for (int i = 0; i < v1.get_size(); i++)
+	{
+		if (v1[i].real() != v2[i].real())
+			return false;
+		else if (v1[i].imag() != v2[i].imag())
 			return false;
 	}
 	return true;
@@ -248,6 +289,15 @@ double len_of_vector(const vector<T>& v)
 	return sqrt(l);
 }
 
+template<class T>
+T vector_len(const vector<complex<T>>& v) {
+	T len = 0;
+	for (int i = 0; i < v.get_size(); i++) {
+		len += abs(v[i]);
+	}
+	return len;
+}
+
 template<typename T>
 double find_first_angle(const vector<T>& a, const vector<T>& b)
 {
@@ -257,6 +307,18 @@ double find_first_angle(const vector<T>& a, const vector<T>& b)
 	double cos_angle = numenator / denominator;
 	double angle_r1 = acos(cos_angle);
 	double angle_1 = 180 / pi * angle_r1;
+	return angle_1;
+}
+
+template<typename T>
+T find_first_angle(const vector<complex<T>>& a, const vector<complex<T>>& b)
+{
+	double pi = 3.14159265;
+	complex<T> numenator = a * b;
+	T denominator = vector_len(a) * vector_len(b);
+	double cos_angle = numenator / denominator;
+	double angle_r1 = acos(cos_angle);
+	double angle_1 = 180 / pi * angle_1;
 	return angle_1;
 }
 
@@ -360,10 +422,15 @@ int main()
 	complex<double> arr_1[2] = { c_1, c_2 };
 	vector<complex<double>> vc1(2,arr_1);
 	cout << "vc1   " << vc1;
+	vector<complex<double>> vc2(2, arr_1);
+	cout << "vc2   " << vc2;
+	if (vc1 == vc2)
+	{
+		cout << "Complex vectors are equal. " << endl;
+	}
 	vector<complex<double>> sum_vc = vc + vc1;
 	cout << "vc + vc1 = " << sum_vc << endl;
 	complex<double> multi = vc * vc1;
 	cout << "vc * vc1 = " << multi;
-
 	return 0;
 }
